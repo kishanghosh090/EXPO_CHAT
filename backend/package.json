@@ -1,0 +1,26 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "serve": "nodemon --watch dist --ext js --exec node dist/src/index.js",
+    "dev": "concurrently -k -n TSC,API \"npm:watch\" \"npm:serve\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.6.0",
+    "concurrently": "^9.2.1",
+    "nodemon": "^3.1.10",
+    "typescript": "^6.0.3"
+  }
+}
