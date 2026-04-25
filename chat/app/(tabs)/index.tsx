@@ -4,7 +4,7 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 export default function Index() {
   const [text, setText] = useState();
   const pingBackend = async () => {
-    const res = await fetch("http://192.168.1.3:4005/");
+    const res = await fetch("http://192.168.1.3:4005");
     const data = await res.json();
     console.log(data.msg);
     setText(data?.msg ? data.msg : "hello");
