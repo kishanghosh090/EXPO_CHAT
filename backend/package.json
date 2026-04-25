@@ -5,9 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "watch": "tsc -w",
-    "serve": "nodemon --watch dist --ext js --exec node dist/src/index.js",
-    "dev": "concurrently -k -n TSC,API \"npm:watch\" \"npm:serve\""
+    "serve": "tsx src/index.ts",
+    "dev": "tsx watch src/index.ts"
   },
   "keywords": [],
   "author": "",
@@ -24,10 +23,9 @@
     "@types/express": "^5.0.6",
     "@types/node": "^25.6.0",
     "@types/pg": "^8.20.0",
-    "concurrently": "^9.2.1",
     "dotenv": "^17.4.2",
-    "nodemon": "^3.1.10",
     "prisma": "^7.8.0",
+    "tsx": "^4.20.6",
     "typescript": "^6.0.3"
   }
 }
