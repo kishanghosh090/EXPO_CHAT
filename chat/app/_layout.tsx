@@ -8,6 +8,7 @@ export default function RootLayout() {
         headerShown: false,
       }}
     >
+      {/* id guard true we can go to this route otherwise we can't */}
       <Stack.Protected guard={!isLoggedIn}>
         <Stack.Screen name="(auth)" />
       </Stack.Protected>
