@@ -9,26 +9,44 @@ datasource db {
 
 model User {
   id            String    @id
-  email         String    @unique
-  name          String?
-  posts         Post[]
+  name          String
+  email         String
   emailVerified Boolean   @default(false)
   image         String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+  pushToken     String?
   sessions      Session[]
   accounts      Account[]
 
+  friendRequestsSent     FriendRequest[] @relation("FriendRequestsSent")
+  friendRequestsReceived FriendRequest[] @relation("FriendRequestsReceived")
+  friends                Friend[]        @relation("Friends1")
+  friendsOf              Friend[]        @relation("Friends2")
+
+  messagesSent     Message[] @relation("MessageSent")
+  messagesReceived Message[] @relation("MessagesReceived")
+
+  @@unique([email])
   @@map("user")
 }
 
-model Post {
-  id        Int     @id @default(autoincrement())
-  title     String
-  content   String?
-  published Boolean @default(false)
-  author    User    @relation(fields: [authorId], references: [id])
-  authorId  String
+model Message {
+  id         String @id @default(cuid())
+  content    String
+  senderId   String
+  receiverId String
+
+  sender   User @relation("MessageSent", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver User @relation("MessagesReceived", fields: [receiverId], references: [id], onDelete: Cascade)
+
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([senderId])
+  @@index([receiverId])
+  @@map("message")
 }
 
 model Session {
@@ -77,4 +95,47 @@ model Verification {
 
   @@index([identifier])
   @@map("verification")
+}
+
+model FriendRequest {
+  id String @id @default(cuid())
+
+  senderId   String
+  receiverId String
+
+  sender   User @relation("FriendRequestsSent", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver User @relation("FriendRequestsReceived", fields: [receiverId], references: [id], onDelete: Cascade)
+
+  status FriendRequestStatus @default(PENDING)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([senderId, receiverId])
+  @@index([receiverId])
+  @@index([senderId])
+}
+
+model Friend {
+  id String @id @default(cuid())
+
+  userId1 String
+  userId2 String
+
+  user1 User @relation("Friends1", fields: [userId1], references: [id], onDelete: Cascade)
+  user2 User @relation("Friends2", fields: [userId2], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId1, userId2])
+  @@index([userId1])
+  @@index([userId2])
+}
+
+enum FriendRequestStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  CANCELLED
 }
