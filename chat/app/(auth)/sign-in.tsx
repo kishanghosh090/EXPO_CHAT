@@ -1,4 +1,7 @@
 import { Colors } from "@/constants/colors";
+import { useAuth } from "@/contexts/auth-context";
+import { Ionicons } from "@expo/vector-icons";
+import { Link } from "expo-router";
 import React, { useState } from "react";
 import {
   ActivityIndicator,
@@ -12,12 +15,9 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Ionicons } from "@expo/vector-icons";
-import { Link } from "expo-router";
-import { useAuth } from "@/contexts/auth-context";
 
 const SignInScren = () => {
-  const { signIn } = useAuth();
+  const { signIn, googleSignIn } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -207,6 +207,36 @@ const SignInScren = () => {
                 Sign In
               </Text>
             )}
+          </Pressable>
+          <Pressable
+            onPress={googleSignIn}
+            disabled={loading}
+            style={({ pressed }) => ({
+              flexDirection: "row",
+              backgroundColor: pressed ? Colors.primary : Colors.primaryLight,
+              borderRadius: 12,
+              paddingVertical: 15,
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: 16,
+              opacity: loading ? 0.7 : 1,
+            })}
+          >
+            <Ionicons
+              name="logo-google"
+              size={20}
+              color={Colors.primary}
+              style={{ marginRight: 8 }}
+            />
+            <Text
+              style={{
+                color: Colors.textPrimary,
+                fontSize: 16,
+                fontWeight: "700",
+              }}
+            >
+              Sign In with Google
+            </Text>
           </Pressable>
 
           <View

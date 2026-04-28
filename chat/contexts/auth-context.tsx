@@ -19,6 +19,7 @@ export interface AuthContextType {
     password: string,
   ) => Promise<null | string>;
   signOut: () => Promise<void>;
+  googleSignIn: () => Promise<null | string>;
 }
 
 const AuthContext = React.createContext<AuthContextType>({
@@ -28,6 +29,7 @@ const AuthContext = React.createContext<AuthContextType>({
   signIn: async () => null,
   signUp: async () => null,
   signOut: async () => {},
+  googleSignIn: async () => null,
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -94,6 +96,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     await authClient.signOut();
   };
 
+  const googleSignIn = async () => {
+    try {
+      const { error } = await authClient.signIn.social({
+        provider: "google",
+      });
+      if (error) {
+        throw new Error(
+          error.message || "An error occurred during Google sign-in",
+        );
+      }
+      // Handle successful Google sign-in, e.g., set user state
+      return null;
+    } catch (error) {
+      throw new Error(
+        (error as Error).message || "An error occurred during Google sign-in",
+      );
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -103,6 +124,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         signIn,
         signUp,
         signOut,
+        googleSignIn,
       }}
     >
       {children}
