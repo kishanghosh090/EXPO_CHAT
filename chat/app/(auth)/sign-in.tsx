@@ -14,10 +14,10 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { Link } from "expo-router";
-// import { useAuth } from "@/contexts/auth-context";
+import { useAuth } from "@/contexts/auth-context";
 
 const SignInScren = () => {
-  // const { signIn } = useAuth();
+  const { signIn } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -32,8 +32,8 @@ const SignInScren = () => {
       }
       setError(null);
       setLoading(true);
-      // const err = await signIn(email, password);
-      // if (err) setError(err);
+      const err = await signIn(email, password);
+      if (err) setError(err);
     } catch (error) {
       setError((error as Error).message);
     } finally {

@@ -1,7 +1,9 @@
+import { useAuth } from "@/contexts/auth-context";
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 export default function Index() {
+  const { signOut } = useAuth();
   const [text, setText] = useState();
   const pingBackend = async () => {
     const res = await fetch("http://192.168.1.3:4005");
@@ -20,6 +22,7 @@ export default function Index() {
       <Pressable
         style={style.btn}
         onPress={() => {
+          signOut();
           pingBackend();
         }}
       >
