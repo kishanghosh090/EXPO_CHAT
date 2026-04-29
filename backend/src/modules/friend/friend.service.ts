@@ -136,13 +136,102 @@ export async function friendsDetailed(
   userId: string,
 ): Promise<Pick<User, "id" | "name" | "email" | "image">[] | []> {
   // Implementation for listing friends with details
-  return [];
+  const links = await prisma.friend.findMany({
+    where: {
+      OR: [
+        {
+          userId1: userId,
+        },
+        {
+          userId2: userId,
+        },
+      ],
+    },
+    include: {
+      user1: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          image: true,
+        },
+      },
+      user2: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          image: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+  if (links.length == 0) {
+    return [];
+  }
+
+  return links.map((link) => {
+    if (link.userId1 === userId) {
+      return link.user2;
+    } else {
+      return link.user1;
+    }
+  });
 }
 
 export async function sendRequestToFriend(
   senderId: string,
-  recipientId: string,
+  receiverId: string,
 ): Promise<boolean | null> {
-  // Implementation for sending friend request
+  if (!receiverId) {
+    throw new ApiError(400, "Receiver ID is required");
+  }
+  if (senderId == receiverId) {
+    throw new ApiError(400, "You cannot send a friend request to yourself");
+  }
+
+  const [user1, user2] = normalizePair(senderId, receiverId);
+
+  const existingFriend = await prisma.friend.findFirst({
+    where: {
+      userId1: user1,
+      userId2: user2,
+    },
+  });
+
+  if (existingFriend) {
+    throw new ApiError(400, "You are already friends");
+  }
+
+  const existingRequest = await prisma.friendRequest.findFirst({
+    where: {
+      OR: [
+        {
+          senderId,
+          receiverId,
+        },
+        {
+          senderId: receiverId,
+          receiverId: senderId,
+        },
+      ],
+      status: "PENDING",
+    },
+  });
+
+  if (existingRequest) {
+    throw new ApiError(400, "A pending friend request already exists");
+  }
+
+  await prisma.friendRequest.create({
+    data: {
+      senderId,
+      receiverId,
+      status: "PENDING",
+    },
+  });
   return true;
 }

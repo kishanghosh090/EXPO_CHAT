@@ -38,7 +38,9 @@ export async function sendRequest(req: AuthenticatedRequest, res: Response) {
     }
     //TODO: PUSH NOTIFICATION LATER
 
-    return res.status(200).json(new ApiResponse(200, null, "Request sent"));
+    return res
+      .status(200)
+      .json(new ApiResponse(200, null, "Request sent successfully"));
   } catch (error) {
     return res.status(500).json(new ApiError(500, "Internal Server Error"));
   }
