@@ -9,6 +9,12 @@ app.all("/api/auth/{*any}", toNodeHandler(auth));
 
 app.use(express.json());
 
+// routes
+import friendRouter from "./modules/friend/friend.routes";
+
+app.use("/api/friend", friendRouter);
+
+
 app.get("/", (req, res) => {
   return res.status(200).json({ msg: "hello from chaiii code" });
 });
