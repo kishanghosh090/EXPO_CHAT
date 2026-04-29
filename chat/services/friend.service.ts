@@ -40,7 +40,9 @@ export class FriendService {
       if (!response.ok) {
         throw new Error(data.message || "Failed to discover users");
       }
-      return data;
+      console.log(data.data);
+      
+      return data.data;
     } catch (error) {
       throw new Error("Failed to discover users");
     }
@@ -48,6 +50,8 @@ export class FriendService {
 
   static async sendFriendRequest(reciverId: string) {
     const headers = await getHeaders();
+    console.log(headers);
+    
     const response = await fetch(`${API_URL}/friend/request`, {
       method: "POST",
       headers,
