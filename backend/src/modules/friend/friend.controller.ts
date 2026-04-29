@@ -69,6 +69,7 @@ export async function discoverFriends(
   try {
     const userId = req.user?.id;
     const search = req.query.search;
+    console.log(search);
 
     if (!userId) {
       return res.status(400).json(new ApiResponse(401, "Unauthorized"));
@@ -80,9 +81,13 @@ export async function discoverFriends(
         .json(new ApiResponse(400, "Search query is required"));
     }
     const data = await discoverUsers(userId, search);
+    console.log(data);
+    
 
     return res.status(200).json(new ApiResponse(200, data, "Success"));
   } catch (error) {
+    console.log(error);
+    
     return res.status(500).json(new ApiError(500, "Internal Server Error"));
   }
 }

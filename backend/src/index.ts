@@ -12,7 +12,7 @@ app.use(express.json());
 // routes
 import friendRouter from "./modules/friend/friend.routes";
 
-app.use("/api/friend", friendRouter);
+app.use("/api/v1/friend", friendRouter);
 
 
 app.get("/", (req, res) => {
@@ -20,5 +20,5 @@ app.get("/", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Server is listing at PORT ${PORT}`);
+  console.log(`Server is listening at PORT ${PORT}`);
 });

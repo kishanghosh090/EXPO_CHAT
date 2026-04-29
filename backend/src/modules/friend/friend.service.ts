@@ -114,7 +114,7 @@ export async function discoverUsers(
     let friendRequestId: string | null = null;
 
     if (friendsSet.has(key)) {
-      relationship = "friend";
+      relationship = "FRIEND";
     } else if (outgoingSet.has(u.id)) {
       relationship = "REQUEST_SENT";
       const request = outgoingRequests.find((r) => r.receiverId === u.id);
@@ -186,6 +186,8 @@ export async function sendRequestToFriend(
   senderId: string,
   receiverId: string,
 ): Promise<boolean | null> {
+  console.log(senderId, receiverId);
+
   if (!receiverId) {
     throw new ApiError(400, "Receiver ID is required");
   }
